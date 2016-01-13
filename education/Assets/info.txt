@@ -1,0 +1,95 @@
+- Rendering Pipeline;
+
+https://www.opengl.org/wiki/Rendering_Pipeline_Overview
+
+https://docs.unity3d.com/Documentation/Components/SL-RenderPipeline.html
+https://docs.unity3d.com/Documentation/Components/RenderTech-DeferredLighting.html
+https://docs.unity3d.com/Documentation/Components/RenderTech-ForwardRendering.html
+https://docs.unity3d.com/Documentation/Components/RenderTech-VertexLit.html
+
+- Shaders: common;
+
+http://docs.unity3d.com/Documentation/Components/SL-Reference.html
+https://docs.unity3d.com/Documentation/Manual/Shaders.html
+http://docs.unity3d.com/Documentation/Components/SL-SurfaceShaderExamples.html
+
+Unity3d shader built-in constants
+
+https://docs.unity3d.com/Documentation/Components/SL-BuiltinValues.html
+
+HLSL Commands
+
+http://msdn.microsoft.com/en-us/library/windows/desktop/ff471376(v=vs.85).aspx
+
+Tags:
+https://docs.unity3d.com/Documentation/Components/SL-PassTags.html
+
+- No light shaders;
+
+unlit shaders group
+
+- Vertex shaders (CG);
+
+http://docs.unity3d.com/Documentation/Components/shader-NormalVertexLit.html
+
+- Pixel Shaders (CG):
++++ Ambient;
++++ Diffuse;
++++ Specular;
++++ Blinn-Phong;
++++ Blinn;
++++ Normal Mapping;
++++ Parallax mapping;
+
+- Lighting models: 
+
++++ Ambient;
++++ Diffuse;
++++ Specular;
+
+
+Post processing shaders
+
+
+- Create shaders:
+CG and Surface shader:
+
+A - Ambient
+D - Diffuse
+S - Specular;
+T - Transparent
+N - Normal mapping;
+P - Parallax (occluision mapping)
+
+1. Unlit - ADS
+2. ADST
+3. ADST + diffuse mask + Specular Mask
+4. ADSTN
+5. ADSTP
+6. Anisotropic shader
+7. Velor (Velvet) Cloth shader (with falloff parameter)
+8. Glass
+9. Water with refraction and reflection
+10. Mirror
+11. Create application that can merge normal maps. Input: Two normal maps. Output: One merged normal map
+12. Create application. In application exist one plane. On this plane exist texture. Your should move texture by rect.
+13. Post effect shader - dizzy
+14. Post effect shader - Blur
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
