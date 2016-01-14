@@ -1,6 +1,7 @@
 ﻿Shader "Custom/1. Unlit - ADS Surface" {    
   Properties {
-    _Color ("Color", Color) = (1.0, 1.0, 1.0, 1.0) 
+    _Color ("Color", Color) = (1.0, 1.0, 1.0, 1.0)
+         _Cutoff ("Alpha cutoff", Range(0,1)) = 0.5
 		 _Shininess ("Shininess", Range (0.03, 1)) = 0.078125
   }
   SubShader {
@@ -24,7 +25,8 @@
  
     void surf (Input IN, inout SurfaceOutput o) {
       o.Albedo = _Color.rgb; 
-	  o.Specular = _Shininess; 
+	  o.Specular = _Shininess;
+      o.Alpha = _Cutoff;
     }
     ENDCG
   } 

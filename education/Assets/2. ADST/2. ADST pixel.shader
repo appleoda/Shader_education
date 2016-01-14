@@ -1,6 +1,7 @@
 ﻿Shader "Custom/1. Unlit - ADS pixel" {   
      Properties {
-         _Color ("Main Color", Color) = (1,1,1,1)  
+         _Color ("Main Color", Color) = (1,1,1,1) 
+         _Cutoff ("Alpha cutoff", Range(0,1)) = 0.5
 		 _Shininess ("Shininess", Range (0.03, 1)) = 0.078125
      }
      
@@ -18,7 +19,8 @@
          #pragma vertex vert 
          #pragma fragment frag
  
- float4 _Color; 
+ float4 _Color;
+ float _Cutoff;
  float _Shininess;
 
          float4 vert(float4 vertexPos : POSITION) : SV_POSITION 
@@ -28,7 +30,7 @@
  
          float4 frag(void) : COLOR 
          {
-            return float4(_Color.x*_Shininess, _Color.y*_Shininess, _Color.z*_Shininess,1); 
+            return float4(_Color.x*_Shininess, _Color.y*_Shininess, _Color.z*_Shininess, _Cutoff); 
                // the fourth component (alpha) is important: 
                // this is semitransparent green
          }

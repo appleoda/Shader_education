@@ -47,6 +47,8 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\NewBehaviourScript.cs" />
+     <None Include="Assets\2. ADST\2. ADST pixel.shader" />
+     <None Include="Assets\2. ADST\2. ADST Surface.shader" />
      <None Include="Assets\1. Unlit - ADS\1. Unlit - ADS Surface.shader" />
      <None Include="Assets\basic_shader.shader" />
      <None Include="Assets\info.txt" />
