@@ -1,4 +1,4 @@
-﻿Shader "Custom/1. Unlit - ADS Surface" {    
+﻿Shader "Custom/2. ADST Surface" {    
   Properties {
     _Color ("Color", Color) = (1.0, 1.0, 1.0, 1.0)
          _Cutoff ("Alpha cutoff", Range(0,1)) = 0.5

@@ -23,7 +23,7 @@
     };
  
     void surf (Input IN, inout SurfaceOutput o) {
-      o.Albedo = _Color.rgb; 
+      o.Albedo = _Color.rgb*_Shininess; 
 	  o.Specular = _Shininess; 
     }
     ENDCG

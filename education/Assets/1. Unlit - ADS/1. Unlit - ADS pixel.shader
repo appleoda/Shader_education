@@ -1,40 +1,85 @@
-﻿Shader "Custom/1. Unlit - ADS pixel" {   
+﻿// Upgrade NOTE: replaced 'PositionFog()' with multiply of UNITY_MATRIX_MVP by position
+// Upgrade NOTE: replaced 'V2F_POS_FOG' with 'float4 pos : SV_POSITION'
+// Upgrade NOTE: replaced '_PPLAmbient' with 'UNITY_LIGHTMODEL_AMBIENT'
+
+Shader "Custom/1. Unlit - ADS pixel" 
+{
+
      Properties {
-         _Color ("Main Color", Color) = (1,1,1,1)  
-		 _Shininess ("Shininess", Range (0.03, 1)) = 0.078125
+        _Color ("Main Color", Color) = (1,1,1,0.5)
+        _SpecColor ("Specular Color", Color) = (0.5, 0.5, 0.5, 1)
+        _Shininess ("Shininess", Range (0.03, 1)) = 0.078125 
+
      }
-     
-       SubShader {
-      Tags { "Queue" = "Transparent" } 
-         // draw after all opaque geometry has been drawn
-      Pass {
-         ZWrite Off // don't write to depth buffer 
-            // in order not to occlude other objects
+     SubShader {
+          //Self-Illumination Depending on Facing Rotation
+          Pass {
+               Tags {"LightMode" = "Always" /* Upgrade NOTE: changed from PixelOrNone to Always */}
+            /* Upgrade NOTE: commented out, possibly part of old style per-pixel lighting: Blend AppSrcAdd AppDstAdd */
+               Color [_PPLAmbient]
 
-         Blend SrcAlpha OneMinusSrcAlpha // use alpha blending
+               CGPROGRAM
+// Upgrade NOTE: excluded shader from DX11 and Xbox360; has structs without semantics (struct v2f members uv,tangentSpaceLightDir)
+#pragma exclude_renderers d3d11 xbox360
+               // profiles arbfp1
+               #pragma vertex vert
+               #pragma fragment frag
+               #pragma fragmentoption ARB_fog_exp2
 
-         CGPROGRAM 
- 
-         #pragma vertex vert 
-         #pragma fragment frag
- 
- float4 _Color; 
- float _Shininess;
+               #include "UnityCG.cginc"
 
-         float4 vert(float4 vertexPos : POSITION) : SV_POSITION 
-         {
-            return mul(UNITY_MATRIX_MVP, vertexPos);
-         }
- 
-         float4 frag(void) : COLOR 
-         {
-            return float4(_Color.x*_Shininess, _Color.y*_Shininess, _Color.z*_Shininess,1); 
-               // the fourth component (alpha) is important: 
-               // this is semitransparent green
-         }
- 
-         ENDCG  
-      }
-   }
+               sampler2D _BumpMap;
+               sampler2D _RimLightRamp;
+               sampler2D _MainTex;
+               float4 _RimLightColor;
+               float4 _Color;
+
+               struct v2f {
+                    float4 pos : SV_POSITION;
+                    float2  uv;
+                    float3  tangentSpaceLightDir;
+               };
+
+               v2f vert (appdata_tan v)
+               {
+                    v2f o;
+                    o.pos = mul (UNITY_MATRIX_MVP, v.vertex);
+                    o.uv = TRANSFORM_UV(0);
+             
+                    float3 viewDir = normalize(ObjSpaceViewDir(v.vertex));
+                   
+                    float3 binormal = cross( normalize(v.normal), normalize(v.tangent.xyz) );
+               float3x3 rotation = float3x3( v.tangent.xyz, binormal, v.normal );
+               
+               o.tangentSpaceLightDir = mul(rotation, viewDir);
+
+                    return o;
+               }
+               
+               half4 frag (v2f i) : COLOR
+            {
+               half3 tangentSpaceNormal = (tex2D(_BumpMap, i.uv).rgb * 2.0) - 1.0;
+            
+               half4 result = float4(0, 0, 0, 1);
+               
+               //You might want to normalize tangentSpaceNormal and i.tangentSpaceLightDir,
+               //but for most meshes this will most likely have minimal, if any, impact on quality.
+               float rampSample = dot(tangentSpaceNormal, i.tangentSpaceLightDir);
+               float intensity = tex2D(_RimLightRamp, rampSample.xx).r;
+               
+               
+               result.rgb = intensity * _RimLightColor.rgb;
+               result.rgb += tex2D(_MainTex, i.uv).rgb * UNITY_LIGHTMODEL_AMBIENT.rgb;
+               
+               return result;
+            }
+         
+               ENDCG
+          }
+       
+          UsePass "Bumped Specular/PPL"
+     }
+   
+     FallBack "Bumped Specular", 1
 }
       
